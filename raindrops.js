@@ -1,11 +1,11 @@
 
 let raindrops = [];
-let maxRaindrops = 800; // Tropfenanzahl
+let maxRaindrops = 800;
 let canvas;
-let mergeDistance = 7; // Abstand, bei dem Tropfen verschmelzen
+let mergeDistance = 7;
 
 function setup() {
-  // Canvas erstellen und in der Mitte des Bildschirms platzieren
+
   canvas = createCanvas(800, 600);
   let canvasElement = canvas.elt;
   canvasElement.id = 'canvas'; 
@@ -21,7 +21,6 @@ function draw() {
   // Überlappungen und verschmelze Tropfen
   checkOverlaps();
   
-  
   for (let i = raindrops.length - 1; i >= 0; i--) {
     const isAlive = raindrops[i].update();
     raindrops[i].draw();
@@ -34,7 +33,7 @@ function draw() {
   drawWindowTexture();
 }
 
-// Funktion zum Überprüfen von Überlappungen und Verschmelzen von Tropfen
+// Überlappung und Verschmelzen von Tropfen
 function checkOverlaps() {
   for (let i = 0; i < raindrops.length; i++) {
     for (let j = i + 1; j < raindrops.length; j++) {
@@ -68,9 +67,9 @@ function checkOverlaps() {
           raindrops[i].maxSize = max(raindrops[i].maxSize, newSize * 1.2);
           raindrops[i].fallingSpeed = newSpeed;
           
-          // Tropfen j entfernen
+          
           raindrops.splice(j, 1);
-          j--; // Index anpassen
+          j--;
         } else {
           raindrops[j].x = newX;
           raindrops[j].y = newY;
@@ -78,10 +77,10 @@ function checkOverlaps() {
           raindrops[j].maxSize = max(raindrops[j].maxSize, newSize * 1.2);
           raindrops[j].fallingSpeed = newSpeed;
           
-          // Tropfen i entfernen
+          
           raindrops.splice(i, 1);
-          i--; // Index anpassen
-          break; // Innere Schleife verlassen, da i geändert wurde
+          i--; 
+          break;
         }
       }
     }
@@ -96,8 +95,8 @@ class Raindrop {
     this.maxSize = random(5, 13);
     this.growthRate = random(0.01, 0.02); // Schnelleres Wachstum
     this.isFalling = false;
-    this.fallingSpeed = random(4, 8); // 2. Schnellere Tropfen (vorher 1-4)
-    this.horizontalMovement = random(-0.8, 0.6); // Etwas mehr horizontale Bewegung
+    this.fallingSpeed = random(4, 8); 
+    this.horizontalMovement = random(-0.8, 0.6); // horizontale Bewegung
     this.opacity = random(0.4, 1);
     this.trail = [];
     this.maxTrailLength = floor(random(10, 20));
@@ -105,7 +104,6 @@ class Raindrop {
   }
  
   update() {
-    // Volumen aktualisieren
     this.volume = pow(this.size, 1);
     
     if (!this.isFalling) {
@@ -124,8 +122,8 @@ class Raindrop {
         this.trail.pop();
       }
      
-      // 4. Fallgeschwindigkeit hängt vom Volumen ab
-      // Größere Tropfen fallen schneller, aber mit einem logarithmischen Wachstum
+      // Fallgeschwindigkeit hängt vom Volumen ab
+      // Größere Tropfen fallen schneller
       let volumeBasedSpeed = 2 + log(this.volume) * 0.8;
       this.fallingSpeed = max(this.fallingSpeed, volumeBasedSpeed);
       
@@ -133,21 +131,19 @@ class Raindrop {
       this.y += this.fallingSpeed;
       this.x += this.horizontalMovement;
      
-      // Leicht beschleunigen
-      this.fallingSpeed += random(0, 0.01); // Etwas stärkere Beschleunigung
+      // Beschleunigung
+      this.fallingSpeed += random(0, 0.01);
      
-      // Gelegentlich Horizontalbewegung ändern
       if (random() < 0.05) {
         this.horizontalMovement = random(-0.6, 0.5);
       }
     }
    
-    // Gibt zurück, ob der Tropfen noch im Sichtbereich ist
     return this.y < height + 50;
   }
  
   draw() {
-    // Spur zeichnen
+    // Spur
     for (let i = 0; i < this.trail.length; i++) {
       const trailSegment = this.trail[i];
       const trailOpacity = (this.trail.length - i) / this.trail.length * this.opacity * 0.8;
@@ -164,13 +160,12 @@ class Raindrop {
       pop();
     }
    
-    // Haupttropfen zeichnen
     push();
     fill(255, 255, 255, this.opacity * 255);
     noStroke();
    
     if (this.isFalling) {
-      // Fallender Tropfen ist oval - größere Tropfen sind mehr verzerrt
+    
       let verticalStretch = map(this.size, 4, 20, 1, 1.5);
       ellipse(
         this.x,
@@ -179,11 +174,9 @@ class Raindrop {
         this.size * 2 * verticalStretch
       );
     } else {
-      // Wachsender Tropfen ist rund
       circle(this.x, this.y, this.size * 2);
     }
    
-    // Glanzlicht zeichnen - größere Tropfen haben größere Glanzlichter
     let highlightSize = this.size * 0.2;
     fill(255, 255, 255, this.opacity * 0.8 * 255);
     circle(
@@ -202,8 +195,8 @@ function createRaindrop() {
     raindrops.push(new Raindrop(x, y));
   }
  
-  // Nächsten Regentropfen schneller planen (vorher 100-400ms)
-  setTimeout(createRaindrop, random(50, 200)); // 1. & 2. Mehr & schnellere Tropfen
+
+  setTimeout(createRaindrop, random(50, 200));
 }
 
 function drawWindowTexture() {
