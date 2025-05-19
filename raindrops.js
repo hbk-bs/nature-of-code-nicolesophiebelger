@@ -1,27 +1,27 @@
-// Regentropfen-Animation in p5.js mit erweiterten Funktionen
+
 let raindrops = [];
-let maxRaindrops = 800; // 1. Mehr Tropfen (von 100 auf 200 erhöht)
+let maxRaindrops = 800; // Tropfenanzahl
 let canvas;
-let mergeDistance = 5; // Abstand, bei dem Tropfen verschmelzen
+let mergeDistance = 7; // Abstand, bei dem Tropfen verschmelzen
 
 function setup() {
   // Canvas erstellen und in der Mitte des Bildschirms platzieren
   canvas = createCanvas(800, 600);
   let canvasElement = canvas.elt;
-  canvasElement.id = 'canvas'; // ID zuweisen für CSS-Styling
+  canvasElement.id = 'canvas'; 
   
-  // Beginne mit der Erstellung von Regentropfen
+  
   createRaindrop();
 }
 
 function draw() {
-  // Canvas mit leichter Transparenz für den Motion-Blur-Effekt löschen
-  background(0, 0, 0, 75); // Alpha 75 entspricht etwa rgba(0,0,0,0.3)
+  
+  background(0, 0, 0, 75);
  
-  // Überprüfe Überlappungen und verschmelze Tropfen
+  // Überlappungen und verschmelze Tropfen
   checkOverlaps();
   
-  // Regentropfen aktualisieren und zeichnen
+  
   for (let i = raindrops.length - 1; i >= 0; i--) {
     const isAlive = raindrops[i].update();
     raindrops[i].draw();
@@ -31,11 +31,10 @@ function draw() {
     }
   }
  
-  // Subtile Fenstertextur hinzufügen
   drawWindowTexture();
 }
 
-// 3. Funktion zum Überprüfen von Überlappungen und Verschmelzen von Tropfen
+// Funktion zum Überprüfen von Überlappungen und Verschmelzen von Tropfen
 function checkOverlaps() {
   for (let i = 0; i < raindrops.length; i++) {
     for (let j = i + 1; j < raindrops.length; j++) {
@@ -58,7 +57,7 @@ function checkOverlaps() {
         let newX = (raindrops[i].x * volumeI + raindrops[j].x * volumeJ) / newVolume;
         let newY = (raindrops[i].y * volumeI + raindrops[j].y * volumeJ) / newVolume;
         
-        // Geschwindigkeiten mitteln
+        // Geschwindigkeit
         let newSpeed = (raindrops[i].fallingSpeed * volumeI + raindrops[j].fallingSpeed * volumeJ) / newVolume;
         
         // Den größeren Tropfen aktualisieren
